@@ -206,6 +206,13 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
             return aInputFrame;
         }
         Features2d.drawMatches(img1, keypoints1, aInputFrame, keypoints2, goodMatches, outputImg, GREEN, RED, drawnMatches, Features2d.NOT_DRAW_SINGLE_POINTS);
+        int coords = 0;
+        for (int i = 0; i < keypoints2.toList().size(); i++)
+        {
+            coords += keypoints2.toList().get(i).pt.x;
+        }
+        coords = (coords/keypoints2.toList().size()) - 150;
+        Log.d("coords", coords + "");
         Imgproc.resize(outputImg, outputImg, aInputFrame.size());
 
         return outputImg;
