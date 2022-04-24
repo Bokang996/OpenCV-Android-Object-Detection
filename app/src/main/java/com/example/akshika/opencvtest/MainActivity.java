@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.WindowManager;
@@ -48,6 +47,7 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
     TextView tvName;
     Scalar RED = new Scalar(255, 0, 0);
     Scalar GREEN = new Scalar(0, 255, 0);
+    Scalar NoScalar = new Scalar(0, 0, 0);
     FeatureDetector detector;
     DescriptorExtractor descriptor;
     DescriptorMatcher matcher;
@@ -199,13 +199,14 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
         }
 
         MatOfDMatch goodMatches = new MatOfDMatch();
+        MatOfDMatch noMatches = new MatOfDMatch();
         goodMatches.fromList(good_matches);
         Mat outputImg = new Mat();
         MatOfByte drawnMatches = new MatOfByte();
         if (aInputFrame.empty() || aInputFrame.cols() < 1 || aInputFrame.rows() < 1) {
             return aInputFrame;
         }
-        Features2d.drawMatches(img1, keypoints1, aInputFrame, keypoints2, goodMatches, outputImg, GREEN, RED, drawnMatches, Features2d.NOT_DRAW_SINGLE_POINTS);
+        Features2d.drawMatches(img1, keypoints1, aInputFrame, keypoints2, noMatches, outputImg, GREEN, RED, drawnMatches, Features2d.NOT_DRAW_SINGLE_POINTS);
         int coords = 0;
         for (int i = 0; i < keypoints2.toList().size(); i++)
         {
