@@ -212,22 +212,23 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
         {
             coords += keypoints2.toList().get(i).pt.y;
         }
-        coords = (coords/keypoints2.toList().size());
-        if ( coords > 450)
-        {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    tvName.setText("Right");
-                }
-            });
-        }
-        else if ( coords < 350)
+        if (keypoints2.toList().size() > 0)
+            coords = (coords/keypoints2.toList().size());
+        if ( coords > 475)
         {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     tvName.setText("Left");
+                }
+            });
+        }
+        else if ( coords < 325)
+        {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tvName.setText("Right");
                 }
             });
         }
