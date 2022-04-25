@@ -54,13 +54,9 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
     Mat descriptors2,descriptors1;
     Mat img1;
     MatOfKeyPoint keypoints1,keypoints2;
+    int coords = 0;
 
-    static {
-        if (!OpenCVLoader.initDebug())
-            Log.d("ERROR", "Unable to load OpenCV");
-        else
-            Log.d("SUCCESS", "OpenCV loaded");
-    }
+
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -83,6 +79,7 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
             }
         }
     };
+
 
     private void initializeOpenCVDependencies() throws IOException {
         mOpenCvCameraView.enableView();
@@ -128,6 +125,8 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
         tvName = (TextView) findViewById(R.id.text1);
+        tvName.setText(coords + "");
+
 
     }
 
@@ -142,13 +141,13 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
     public void onResume() {
         super.onResume();
         if (!OpenCVLoader.initDebug()) {
-            Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
         } else {
-            Log.d(TAG, "OpenCV library found inside package. Using it!");
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
     }
+
+
 
     public void onDestroy() {
         super.onDestroy();
@@ -163,6 +162,7 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
 
     public void onCameraViewStopped() {
     }
+
 
     public Mat recognize(Mat aInputFrame) {
 
@@ -207,20 +207,47 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
             return aInputFrame;
         }
         Features2d.drawMatches(img1, keypoints1, aInputFrame, keypoints2, noMatches, outputImg, GREEN, RED, drawnMatches, Features2d.NOT_DRAW_SINGLE_POINTS);
-        int coords = 0;
+        coords = 0;
         for (int i = 0; i < keypoints2.toList().size(); i++)
         {
-            coords += keypoints2.toList().get(i).pt.x;
+            coords += keypoints2.toList().get(i).pt.y;
         }
-        coords = (coords/keypoints2.toList().size()) - 150;
-        Log.d("coords", coords + "");
+        coords = (coords/keypoints2.toList().size());
+        if ( coords > 450)
+        {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tvName.setText("Right");
+                }
+            });
+        }
+        else if ( coords < 350)
+        {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tvName.setText("Left");
+                }
+            });
+        }
+        else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tvName.setText("Forward");
+                }
+            });
+        }
         Imgproc.resize(outputImg, outputImg, aInputFrame.size());
-
         return outputImg;
     }
+
+
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         return recognize(inputFrame.rgba());
 
     }
 }
+
