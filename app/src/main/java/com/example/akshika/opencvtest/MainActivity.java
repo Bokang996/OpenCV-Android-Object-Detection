@@ -54,7 +54,8 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
     Mat descriptors2,descriptors1;
     Mat img1;
     MatOfKeyPoint keypoints1,keypoints2;
-    int coords = 0;
+    private int coords = 0;
+    private int density = 0;
 
 
 
@@ -233,13 +234,32 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
             });
         }
         else {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    tvName.setText("Forward");
-                }
-            });
+            if ( density > 100 )
+            {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tvName.setText("Forward");
+                    }
+                });
+            }
+            else
+            {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tvName.setText("Stop");
+                    }
+                });
+            }
+
         }
+        for (int i = 0; i < keypoints2.toList().size(); i++)
+        {
+            density += Math.abs(keypoints2.toList().get(i).pt.y - coords);
+
+        }
+        density /= keypoints2.toList().size();
         Imgproc.resize(outputImg, outputImg, aInputFrame.size());
         return outputImg;
     }
