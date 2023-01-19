@@ -4,3 +4,6 @@ This code aims to provide voice commands, remote control, localization, and obje
 
 ## Reports
  - [Architectural Spike Report](https://docs.google.com/document/d/1-CQ9EZYAPKHpJ7JKSj66phDxTqicFZDZ5KkcjRXm5dI/edit?usp=sharing)
+ 
+## Notes
+ - [Tasks](https://docs.google.com/document/d/1WmImX2puSjwlEVctEJiyWqlQgzYsrG4T0BfPNFhrNGU/edit?usp=sharing)
